@@ -1,9 +1,10 @@
 version: '3'
 services:
   postfix-server:
-    tty: true
-    stdin_open: true
     build:
       context: .
-      args:
-        - DOMAIN=example.com
+    environment:
+      - POSTFIX_MYHOSTNAME=no-reply.bitendian.com
+      - POSTFIX_MYDESTINATION=localhost
+      - POSTFIX_MYDOMAIN=bitendian.com
+    container_name: 'bitendian-postfix-server'

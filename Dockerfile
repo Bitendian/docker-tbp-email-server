@@ -5,21 +5,23 @@ FROM debian:10.5-slim
 ENV DEBIAN_FRONTEND="noninteractive"
 
 # Postfix install process
-RUN apt-get update
-RUN apt-get install -y mailutils
-RUN apt-get install -y postfix
+RUN apt-get update && \
+    apt-get install -y mailutils && \
+    apt-get install -y postfix
+
 
 # Unset env var for install process
 ENV DEBIAN_FRONTEND newt
 
 # Postfix config
-ARG DOMAIN
-COPY main.cf etc/postfix/main.cf
-RUN sed -i 's|mydestination = |&'$DOMAIN', |' /etc/postfix/main.cf
-RUN sed -i 's|unix  -       -       y       -       -       smtp|unix  -       -       n       -       -       smtp|' /etc/postfix/master.cf
+ENV POSTFIX_MYHOSTNAME no-reply.bitendian.com
+ENV POSTFIX_MYDESTINATION \$myhostname, localhost.\$mydomain, localhost
+ENV POSTFIX_MYDOMAIN bitendian.com
 
+COPY main.cf /etc/postfix/main.cf
+COPY /bin/run.sh /etc/postfix/bin/run.sh
 
-COPY run.sh / 
-RUN chmod +x /run.sh
-CMD ["/run.sh"]
+RUN chmod +x /etc/postfix/bin/run.sh
+ENTRYPOINT /etc/postfix/bin/run.sh $POSTFIX_MYHOSTNAME $POSTFIX_MYDESTINATION $POSTFIX_MYDOMAIN
+
 
