@@ -1,10 +1,12 @@
 version: '3'
 services:
-  postfix-server:
-    build:
-      context: .
+  bitendian-email-server:
+    image: bitendian/tbp-email-server:latest
+    container_name: 'bitendian-email-server'
+    restart: 'always'
+    networks:
+      - bitendian-internal
     environment:
-      - POSTFIX_MYHOSTNAME=no-reply.bitendian.com
-      - POSTFIX_MYDESTINATION=localhost
-      - POSTFIX_MYDOMAIN=bitendian.com
-    container_name: 'bitendian-postfix-server'
+      POSTFIX_MYHOSTNAME: no-reply.bitendian.com
+      POSTFIX_MYDESTINATION: localhost
+      POSTFIX_MYDOMAIN: bitendian.com
