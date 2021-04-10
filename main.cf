@@ -24,10 +24,14 @@ compatibility_level = 2
 
 
 # TLS parameters
+# incomming SMTP connections (from other client containers)
 smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
 smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
 smtpd_use_tls=no
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+
+# outgoing SMTP connections (to other externals servers)
+smtp_use_tls=yes
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
